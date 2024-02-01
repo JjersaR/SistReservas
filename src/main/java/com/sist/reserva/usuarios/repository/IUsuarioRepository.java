@@ -13,6 +13,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface IUsuarioRepository extends JpaRepository<Usuarios, Long> {
@@ -43,12 +44,13 @@ public interface IUsuarioRepository extends JpaRepository<Usuarios, Long> {
 
   // Obtener Usuarios Registrados en un Rango de Fechas
   @Query(value = "SELECT CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) AS"
-      + " usuarioNombre, u.fecha_registro AS FechaRegistro, u.correo, u.telefono FROM Usuarios u WHERE"
-      + " u.fecha_registro BETWEEN :fechaInicio AND :fechaFin", nativeQuery = true)
+      + " usuarioNombre, u.fecha_registro AS FechaRegistro, u.correo, u.telefono FROM"
+      + " Usuarios u WHERE u.fecha_registro BETWEEN :fechaInicio AND :fechaFin", nativeQuery = true)
   List<UsuariosPorRangoFechasList> findUsuariosByFechaRegistroBetween(
       LocalDate fechaInicio, LocalDate fechaFin);
 
   // actualizar
+  @Transactional
   @Query("UPDATE Usuarios u SET u.nombre = :#{#usuario.nombre}, u.apellidoPaterno ="
       + " :#{#usuario.apellidoPaterno}, u.apellidoMaterno = :#{#usuario.apellidoMaterno},"
       + " u.correo = :#{#usuario.correo}, u.telefono = :#{#usuario.telefono} WHERE u.id ="

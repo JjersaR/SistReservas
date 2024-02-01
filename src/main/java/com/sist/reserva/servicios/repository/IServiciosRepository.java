@@ -1,5 +1,10 @@
 package com.sist.reserva.servicios.repository;
 
+import com.sist.reserva.servicios.dto.IServiciosConPreciosMenores;
+import com.sist.reserva.servicios.dto.IServiciosDisponibles;
+import com.sist.reserva.servicios.dto.IServiciosPorCategoria;
+import com.sist.reserva.servicios.dto.IServiciosPorDuracion;
+import com.sist.reserva.servicios.dto.IServiciosPorUbicacion;
 import com.sist.reserva.servicios.dto.ServiciosUpdate;
 import com.sist.reserva.servicios.entity.DisponibilidadServicio;
 import com.sist.reserva.servicios.entity.Servicios;
@@ -18,19 +23,19 @@ public interface IServiciosRepository extends JpaRepository<Servicios, Long> {
   Optional<Servicios> findById(Long id);
 
   // Obtener Servicios por Categoría
-  List<Servicios> findByCategoria(String categoria);
+  List<IServiciosPorCategoria> findByCategoria(String categoria);
 
   // Obtener Servicios Disponibles
-  List<Servicios> findServiciosByDisponible(DisponibilidadServicio disponible);
+  List<IServiciosDisponibles> findByDisponible(DisponibilidadServicio disponible);
 
   // Obtener Servicios por Ubicación
-  List<Servicios> findServiciosByUbicacion(String ubicacion);
+  List<IServiciosPorUbicacion> findByUbicacion(String ubicacion);
 
   // Obtener Servicios con Duración Específica
-  List<Servicios> findServiciosByDuracion(Duration duracion);
+  List<IServiciosPorDuracion> findByDuracion(Duration duracion);
 
   // Obtener Servicios con Precio Menor a un Valor
-  List<Servicios> findServiciosByPrecioLessThan(BigDecimal precio);
+  List<IServiciosConPreciosMenores> findByPrecioLessThan(BigDecimal precio);
 
   // actualizar
   @Query("UPDATE Servicios s SET s.nombre = :#{#servicio.nombre}, s.precio = :#{#servicio.precio},"

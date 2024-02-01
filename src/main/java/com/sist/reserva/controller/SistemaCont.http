@@ -1,8 +1,9 @@
+# ---------------------------- PARTE DE USUARIOS ----------------------------
 # mostrar todos los usuarios
 GET http://localhost:8080/sistReserva/usuarios
 
 # mostrar usuario por ID
-GET http://localhost:8080/sistReserva/usuarios/21
+GET http://localhost:8080/sistReserva/usuarios/31
 
 # mostrar reservas de usuario
 GET http://localhost:8080/sistReserva/usuarios/20/reservas
@@ -14,20 +15,32 @@ GET http://localhost:8080/sistReserva/usuarios/reservas-pendientes
 GET http://localhost:8080/sistReserva/usuarios/reservas/rango-fechas?fechaInicio=2023-12-30&fechaFin=2024-01-31
 
 # guardar
-POST http://localhost:8080/
+POST http://localhost:8080/sistReserva/usuarios/guardar
 Content-Type: application/json
 
 {
-
+  "fechaRegistro": "2024-02-01",
+  "nombre": "Ricardo",
+  "apellidoPaterno": "Sanchez",
+  "apellidoMaterno": "Jeronimo",
+  "correo": "rikisj5649@gmail.com"
 }
 
 # actualizar
-PUT http://localhost:8080/
+PUT http://localhost:8080/sistReserva/usuarios/actualizar/31
 Content-Type: application/json
 
 {
-
+  "nombre": "Ricardo",
+  "apellidoPaterno": "Sanchez",
+  "apellidoMaterno": "Jeronimo",
+  "correo": "rikisj5649@gmail.com",
+  "telefono": "5511779498"
 }
 
 # Borrar
-DELETE http://localhost:8080/
+DELETE http://localhost:8080/sistReserva/usuarios/eliminar/31
+
+# ---------------------------- PARTE DE SERVICIOS ----------------------------
+# mostrar todos los servicios
+GET http://localhost:8080/sistReserva/servicios

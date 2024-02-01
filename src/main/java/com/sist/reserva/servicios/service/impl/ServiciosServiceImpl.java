@@ -1,6 +1,11 @@
 package com.sist.reserva.servicios.service.impl;
 
 import com.sist.reserva.servicios.dao.IServiciosDAO;
+import com.sist.reserva.servicios.dto.IServiciosConPreciosMenores;
+import com.sist.reserva.servicios.dto.IServiciosDisponibles;
+import com.sist.reserva.servicios.dto.IServiciosPorCategoria;
+import com.sist.reserva.servicios.dto.IServiciosPorDuracion;
+import com.sist.reserva.servicios.dto.IServiciosPorUbicacion;
 import com.sist.reserva.servicios.dto.ServiciosUpdate;
 import com.sist.reserva.servicios.entity.DisponibilidadServicio;
 import com.sist.reserva.servicios.entity.Servicios;
@@ -29,27 +34,27 @@ public class ServiciosServiceImpl implements IServiciosService {
   }
 
   @Override
-  public List<Servicios> findByCategoria(String categoria) {
+  public List<IServiciosPorCategoria> findByCategoria(String categoria) {
     return serviciosDAO.findByCategoria(categoria);
   }
 
   @Override
-  public List<Servicios> findServiciosByDisponible(DisponibilidadServicio disponible) {
+  public List<IServiciosDisponibles> findServiciosByDisponible(DisponibilidadServicio disponible) {
     return serviciosDAO.findServiciosByDisponible(disponible);
   }
 
   @Override
-  public List<Servicios> findServiciosByUbicacion(String ubicacion) {
+  public List<IServiciosPorUbicacion> findServiciosByUbicacion(String ubicacion) {
     return serviciosDAO.findServiciosByUbicacion(ubicacion);
   }
 
   @Override
-  public List<Servicios> findServiciosByDuracion(Duration duracion) {
+  public List<IServiciosPorDuracion> findServiciosByDuracion(Duration duracion) {
     return serviciosDAO.findServiciosByDuracion(duracion);
   }
 
   @Override
-  public List<Servicios> findServiciosByPrecioLessThan(BigDecimal precio) {
+  public List<IServiciosConPreciosMenores> findServiciosByPrecioLessThan(BigDecimal precio) {
     return serviciosDAO.findServiciosByPrecioLessThan(precio);
   }
 

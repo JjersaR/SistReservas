@@ -1,11 +1,15 @@
 package com.sist.reserva.controller;
 
+import com.sist.reserva.servicios.dto.ServiciosAllList;
+import com.sist.reserva.servicios.mapper.IServiciosMapper;
+import com.sist.reserva.servicios.service.IServiciosService;
 import com.sist.reserva.usuarios.dto.ReservasDeUsuarioList;
 import com.sist.reserva.usuarios.dto.ReservasPendientesList;
 import com.sist.reserva.usuarios.dto.ServiciosReservadosPorUsuarioList;
 import com.sist.reserva.usuarios.dto.UsuarioById;
 import com.sist.reserva.usuarios.dto.UsuarioListAll;
 import com.sist.reserva.usuarios.dto.UsuarioSave;
+import com.sist.reserva.usuarios.dto.UsuarioUpdate;
 import com.sist.reserva.usuarios.dto.UsuariosPorRangoFechasList;
 import com.sist.reserva.usuarios.entity.Usuarios;
 import com.sist.reserva.usuarios.mapper.IUsuarioMapper;
@@ -21,9 +25,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,6 +41,8 @@ public class SistemaCont {
 
   @Autowired
   private IUsuarioService usuarioService;
+  @Autowired
+  private IServiciosService serviciosService;
 
   // listar todos
   @GetMapping("/usuarios")
@@ -126,5 +134,49 @@ public class SistemaCont {
     usuarioService.save(usuario);
     return ResponseEntity.created(new URI("/sistReserva/usuarios/guardar"))
         .body("Usuario " + usuarioSave.getTelefono() + " creado");
+  }
+
+  // actualizar
+  @PutMapping("/usuarios/actualizar/{id}")
+  public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody @Valid UsuarioUpdate usuUpdate) {
+    if (id == null) {
+      return ResponseEntity.notFound().build();
+    }
+    usuUpdate.setId(id);
+    usuarioService.update(usuUpdate);
+    return ResponseEntity.ok("Usuario " + id + " actualizado");
+  }
+
+  // eliminar usuario
+  @DeleteMapping("/usuarios/eliminar/{id}")
+  public ResponseEntity<?> deleteById(@PathVariable Long id) {
+    if (id == null) {
+      return ResponseEntity.noContent().build();
+    }
+    Optional<Usuarios> usOp = usuarioService.findById(id);
+    if (!usOp.isPresent()) {
+      return ResponseEntity.notFound().build();
+    }
+    usuarioService.deleteById(id);
+    return ResponseEntity.ok("Usuario " + id + " eliminado");
+  }
+
+  /*
+   * ------------------------
+   *
+   *
+   * | PARTE DE SERVICIOS |
+   *
+   *
+   * ------------------------
+   */
+
+  @GetMapping("/servicios")
+  public ResponseEntity<?> allServicios() {
+    List<ServiciosAllList> listaTodosLosServicios = IServiciosMapper.INSTANCE.toAllListDTO(serviciosService.findAll());
+    if (listaTodosLosServicios.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
+    return ResponseEntity.ok(listaTodosLosServicios);
   }
 }

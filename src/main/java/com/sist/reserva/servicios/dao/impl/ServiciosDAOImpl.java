@@ -1,6 +1,11 @@
 package com.sist.reserva.servicios.dao.impl;
 
 import com.sist.reserva.servicios.dao.IServiciosDAO;
+import com.sist.reserva.servicios.dto.IServiciosConPreciosMenores;
+import com.sist.reserva.servicios.dto.IServiciosDisponibles;
+import com.sist.reserva.servicios.dto.IServiciosPorCategoria;
+import com.sist.reserva.servicios.dto.IServiciosPorDuracion;
+import com.sist.reserva.servicios.dto.IServiciosPorUbicacion;
 import com.sist.reserva.servicios.dto.ServiciosUpdate;
 import com.sist.reserva.servicios.entity.DisponibilidadServicio;
 import com.sist.reserva.servicios.entity.Servicios;
@@ -29,28 +34,28 @@ public class ServiciosDAOImpl implements IServiciosDAO {
   }
 
   @Override
-  public List<Servicios> findByCategoria(String categoria) {
+  public List<IServiciosPorCategoria> findByCategoria(String categoria) {
     return serviciosRepository.findByCategoria(categoria);
   }
 
   @Override
-  public List<Servicios> findServiciosByDisponible(DisponibilidadServicio disponible) {
-    return serviciosRepository.findServiciosByDisponible(disponible);
+  public List<IServiciosDisponibles> findServiciosByDisponible(DisponibilidadServicio disponible) {
+    return serviciosRepository.findByDisponible(disponible);
   }
 
   @Override
-  public List<Servicios> findServiciosByUbicacion(String ubicacion) {
-    return serviciosRepository.findServiciosByUbicacion(ubicacion);
+  public List<IServiciosPorUbicacion> findServiciosByUbicacion(String ubicacion) {
+    return serviciosRepository.findByUbicacion(ubicacion);
   }
 
   @Override
-  public List<Servicios> findServiciosByDuracion(Duration duracion) {
-    return serviciosRepository.findServiciosByDuracion(duracion);
+  public List<IServiciosPorDuracion> findServiciosByDuracion(Duration duracion) {
+    return serviciosRepository.findByDuracion(duracion);
   }
 
   @Override
-  public List<Servicios> findServiciosByPrecioLessThan(BigDecimal precio) {
-    return serviciosRepository.findServiciosByPrecioLessThan(precio);
+  public List<IServiciosConPreciosMenores> findServiciosByPrecioLessThan(BigDecimal precio) {
+    return serviciosRepository.findByPrecioLessThan(precio);
   }
 
   @Override

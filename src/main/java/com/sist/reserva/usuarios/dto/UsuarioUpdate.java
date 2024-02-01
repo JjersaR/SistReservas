@@ -1,20 +1,31 @@
 package com.sist.reserva.usuarios.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import org.springframework.lang.Nullable;
 
 public class UsuarioUpdate {
 
   @JsonIgnore
   private Long id;
 
+  @NotBlank
   private String nombre;
 
+  @NotBlank
   private String apellidoPaterno;
 
+  @NotBlank
   private String apellidoMaterno;
 
+  @Email
+  @Nullable
   private String correo;
 
+  @Pattern(regexp = "^(55|56)\\d{8}$")
+  @Nullable
   private String telefono;
 
   public String getNombre() {

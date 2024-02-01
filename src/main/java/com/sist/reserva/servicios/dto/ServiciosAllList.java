@@ -1,37 +1,24 @@
 package com.sist.reserva.servicios.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.Duration;
-import org.springframework.lang.Nullable;
 
-public class ServiciosUpdate {
+public class ServiciosAllList {
 
-  @JsonIgnore
-  @Nullable
   private Long id;
 
-  @NotBlank
   private String nombre;
 
-  @NotNull
   private BigDecimal precio;
 
-  @Nullable
   private String categoria;
 
-  @NotNull
   private Duration duracion;
 
-  @NotBlank
   private String disponible;
 
-  @NotBlank
   private String ubicacion;
 
-  @Nullable
   private String descripcion;
 
   public Long getId() {
