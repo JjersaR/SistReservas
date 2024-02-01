@@ -1,0 +1,33 @@
+# mostrar todos los usuarios
+GET http://localhost:8080/sistReserva/usuarios
+
+# mostrar usuario por ID
+GET http://localhost:8080/sistReserva/usuarios/21
+
+# mostrar reservas de usuario
+GET http://localhost:8080/sistReserva/usuarios/20/reservas
+
+# mostrar reservas pendientes
+GET http://localhost:8080/sistReserva/usuarios/reservas-pendientes
+
+# usuarios agregados dentro de un rango de fechas
+GET http://localhost:8080/sistReserva/usuarios/reservas/rango-fechas?fechaInicio=2023-12-30&fechaFin=2024-01-31
+
+# guardar
+POST http://localhost:8080/
+Content-Type: application/json
+
+{
+
+}
+
+# actualizar
+PUT http://localhost:8080/
+Content-Type: application/json
+
+{
+
+}
+
+# Borrar
+DELETE http://localhost:8080/
