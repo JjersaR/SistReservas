@@ -13,8 +13,10 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface IServiciosRepository extends JpaRepository<Servicios, Long> {
@@ -42,5 +44,7 @@ public interface IServiciosRepository extends JpaRepository<Servicios, Long> {
       + " s.categoria = :#{#servicio.categoria}, s.duracion = :#{#servicio.duracion},"
       + " s.disponible = :#{#servicio.disponible}, s.ubicacion = :#{#servicio.ubicacion},"
       + " s.descripcion = :#{#servicio.descripcion} WHERE s.id = :#{#servicio.id}")
+  @Modifying
+  @Transactional
   void update(ServiciosUpdate servicio);
 }

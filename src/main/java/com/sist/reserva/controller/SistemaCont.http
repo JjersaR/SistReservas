@@ -20,10 +20,10 @@ Content-Type: application/json
 
 {
   "fechaRegistro": "2024-02-01",
-  "nombre": "Ricardo",
-  "apellidoPaterno": "Sanchez",
-  "apellidoMaterno": "Jeronimo",
-  "correo": "rikisj5649@gmail.com"
+  "nombre": "R",
+  "apellidoPaterno": "S",
+  "apellidoMaterno": "J",
+  "correo": ""
 }
 
 # actualizar
@@ -31,11 +31,11 @@ PUT http://localhost:8080/sistReserva/usuarios/actualizar/31
 Content-Type: application/json
 
 {
-  "nombre": "Ricardo",
-  "apellidoPaterno": "Sanchez",
-  "apellidoMaterno": "Jeronimo",
-  "correo": "rikisj5649@gmail.com",
-  "telefono": "5511779498"
+  "nombre": "R",
+  "apellidoPaterno": "S",
+  "apellidoMaterno": "J",
+  "correo": "",
+  "telefono": ""
 }
 
 # Borrar
@@ -44,3 +44,49 @@ DELETE http://localhost:8080/sistReserva/usuarios/eliminar/31
 # ---------------------------- PARTE DE SERVICIOS ----------------------------
 # mostrar todos los servicios
 GET http://localhost:8080/sistReserva/servicios
+
+# mostrar servicio por id
+GET http://localhost:8080/sistReserva/servicios/37
+
+# mostrar servicios por categoria
+GET http://localhost:8080/sistReserva/servicios/categoria/Streaming
+
+# mostrar segun el campo disponible {DISPONIBLE, RESERVADO, MANTENIMIENTO, NO_DISPONIBLE}
+GET http://localhost:8080/sistReserva/servicios/disponibles/MANTENIMIENTO
+
+# mostrar segun su ubicacion
+GET http://localhost:8080/sistReserva/servicios/ubicacion/Tijuana
+
+# mostrar segun su duracion
+GET http://localhost:8080/sistReserva/servicios/duracion/0.000000003S
+
+# guardar un servicio
+POST http://localhost:8080/sistReserva/servicios/guardar
+Content-Type: application/json
+
+{
+  "nombre": "Spotify",
+  "precio": 110.00,
+  "categoria": "Streaming",
+  "duracion": 150,
+  "disponible": "NO_DISPONIBLE",
+  "ubicacion": "CDMX",
+  "descripcion": "Escuchar musica sin anuncios"
+}
+
+# actualizar
+PUT http://localhost:8080/sistReserva/servicios/actualizar/47
+Content-Type: application/json
+
+{
+  "nombre": "Spotify",
+  "precio": 150.00,
+  "categoria": "Streaming",
+  "duracion": 250,
+  "disponible": "RESERVADO",
+  "ubicacion": "CDMX",
+  "descripcion": "Escuchar musica sin anuncios y sin conexion a internet"
+}
+
+# Borrar
+DELETE http://localhost:8080/sistReserva/servicios/eliminar/47

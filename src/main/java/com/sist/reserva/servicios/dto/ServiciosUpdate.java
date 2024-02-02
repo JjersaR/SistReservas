@@ -1,6 +1,7 @@
 package com.sist.reserva.servicios.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sist.reserva.servicios.entity.DisponibilidadServicio;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -25,8 +26,8 @@ public class ServiciosUpdate {
   @NotNull
   private Duration duracion;
 
-  @NotBlank
-  private String disponible;
+  @NotNull
+  private DisponibilidadServicio disponible;
 
   @NotBlank
   private String ubicacion;
@@ -74,11 +75,11 @@ public class ServiciosUpdate {
     this.duracion = duracion;
   }
 
-  public String getDisponible() {
+  public DisponibilidadServicio getDisponible() {
     return disponible;
   }
 
-  public void setDisponible(String disponible) {
+  public void setDisponible(DisponibilidadServicio disponible) {
     this.disponible = disponible;
   }
 

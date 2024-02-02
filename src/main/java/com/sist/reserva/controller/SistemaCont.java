@@ -1,6 +1,14 @@
 package com.sist.reserva.controller;
 
+import com.sist.reserva.servicios.dto.IServiciosConPreciosMenores;
+import com.sist.reserva.servicios.dto.IServiciosDisponibles;
+import com.sist.reserva.servicios.dto.IServiciosPorCategoria;
+import com.sist.reserva.servicios.dto.IServiciosPorDuracion;
+import com.sist.reserva.servicios.dto.IServiciosPorUbicacion;
 import com.sist.reserva.servicios.dto.ServiciosAllList;
+import com.sist.reserva.servicios.dto.ServiciosUpdate;
+import com.sist.reserva.servicios.entity.DisponibilidadServicio;
+import com.sist.reserva.servicios.entity.Servicios;
 import com.sist.reserva.servicios.mapper.IServiciosMapper;
 import com.sist.reserva.servicios.service.IServiciosService;
 import com.sist.reserva.usuarios.dto.ReservasDeUsuarioList;
@@ -17,8 +25,10 @@ import com.sist.reserva.usuarios.service.IUsuarioService;
 
 import jakarta.validation.Valid;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -171,12 +181,125 @@ public class SistemaCont {
    * ------------------------
    */
 
+  // listar todos los servicios
   @GetMapping("/servicios")
   public ResponseEntity<?> allServicios() {
     List<ServiciosAllList> listaTodosLosServicios = IServiciosMapper.INSTANCE.toAllListDTO(serviciosService.findAll());
+
     if (listaTodosLosServicios.isEmpty()) {
       return ResponseEntity.noContent().build();
     }
+
     return ResponseEntity.ok(listaTodosLosServicios);
+  }
+
+  // listar servicio por id
+  @GetMapping("/servicios/{id}")
+  public ResponseEntity<?> findServicioById(@PathVariable Long id) {
+    if (id == null) {
+      return ResponseEntity.notFound().build();
+    }
+    Optional<Servicios> servOp = serviciosService.findById(id);
+    if (!servOp.isPresent()) {
+      return ResponseEntity.notFound().build();
+    }
+    Servicios servicioEncontrado = servOp.get();
+    ServiciosAllList servicioId = IServiciosMapper.INSTANCE.map(servicioEncontrado);
+    return ResponseEntity.ok(servicioId);
+  }
+
+  // listar por categoria
+  @GetMapping("/servicios/categoria/{categoria}")
+  public ResponseEntity<?> findCategoria(@PathVariable String categoria) {
+    List<IServiciosPorCategoria> serviciosPorCategorias = serviciosService.findByCategoria(categoria);
+    if (serviciosPorCategorias.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
+    return ResponseEntity.ok(serviciosPorCategorias);
+  }
+
+  // servicios segun su disponibilidad
+  @GetMapping("/servicios/disponibles/{disponibilidad}")
+  public ResponseEntity<?> findDisponibles(@PathVariable String disponibilidad) {
+    DisponibilidadServicio disponible = IServiciosMapper.INSTANCE.mapToEnum(disponibilidad);
+    List<IServiciosDisponibles> serviciosDisponibles = serviciosService.findServiciosByDisponible(disponible);
+    if (serviciosDisponibles.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
+    return ResponseEntity.ok(serviciosDisponibles);
+  }
+
+  // obtener servicios por ubicación
+  @GetMapping("/servicios/ubicacion/{ubicacion}")
+  public ResponseEntity<?> findByUbicacion(@PathVariable String ubicacion) {
+    if (ubicacion == null) {
+      return ResponseEntity.notFound().build();
+    }
+    List<IServiciosPorUbicacion> serviciosPorUbicacions = serviciosService.findServiciosByUbicacion(ubicacion);
+    if (serviciosPorUbicacions.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
+    return ResponseEntity.ok(serviciosPorUbicacions);
+  }
+
+  // Obtener Servicios con Duración Específica
+  @GetMapping("/servicios/duracion/{duracion}")
+  public ResponseEntity<?> findByDuracion(@PathVariable String duracion) {
+    // convertir a tipo Duration
+    Duration duration = Duration.parse("PT" + duracion);
+    // crear la lista de proyeccion
+    List<IServiciosPorDuracion> serviciosPorDuracions = serviciosService.findServiciosByDuracion(duration);
+    if (serviciosPorDuracions.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
+    return ResponseEntity.ok(serviciosPorDuracions);
+  }
+
+  // Obtener Servicios con Precio Menor a un Valor
+  @GetMapping("/servicios/precio-menos-que/{precio}")
+  public ResponseEntity<?> findByPrecio(@PathVariable BigDecimal precio) {
+    if (precio == null) {
+      return ResponseEntity.noContent().build();
+    }
+    List<IServiciosConPreciosMenores> preciosMenores = serviciosService.findServiciosByPrecioLessThan(precio);
+    if (preciosMenores.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
+    return ResponseEntity.ok(preciosMenores);
+  }
+
+  // guardar servicio
+  @PostMapping("/servicios/guardar")
+  public ResponseEntity<?> saveServicio(@RequestBody @Valid ServiciosUpdate serviciosSave) throws URISyntaxException {
+    Servicios servicios = IServiciosMapper.INSTANCE.toEnt(serviciosSave);
+    serviciosService.save(servicios);
+    return ResponseEntity.created(new URI("/sistReserva/servicios/guardar"))
+        .body("Servicio " + serviciosSave.getNombre() + " guardado");
+  }
+
+  // actualizar servicio
+  @PutMapping("/servicios/actualizar/{id}")
+  public ResponseEntity<?> updateServicio(@PathVariable Long id, @RequestBody @Valid ServiciosUpdate serviciosUpdate) {
+    Optional<Servicios> serOp = serviciosService.findById(id);
+    if (!serOp.isPresent()) {
+      return ResponseEntity.notFound().build();
+    }
+    serviciosUpdate.setId(id);
+    serviciosService.update(serviciosUpdate);
+    return ResponseEntity.ok("Servicio " + serviciosUpdate.getNombre() + " actualizado");
+  }
+
+  // eliminar un servicio por su id
+  @DeleteMapping("/servicios/eliminar/{id}")
+  public ResponseEntity<?> deleteServicio(@PathVariable Long id) {
+    if (id == null) {
+      return ResponseEntity.notFound().build();
+    }
+    Optional<Servicios> serOp = serviciosService.findById(id);
+    if (!serOp.isPresent()) {
+      return ResponseEntity.notFound().build();
+    }
+    serviciosService.deleteById(id);
+    return ResponseEntity.ok("Servicio " + id + " eliminado");
   }
 }

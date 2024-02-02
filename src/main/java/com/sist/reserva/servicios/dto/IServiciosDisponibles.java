@@ -1,6 +1,7 @@
 package com.sist.reserva.servicios.dto;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 
 public interface IServiciosDisponibles {
 
@@ -8,7 +9,7 @@ public interface IServiciosDisponibles {
 
   BigDecimal getPrecio();
 
-  int getDuracion();
+  Duration getDuracion();
 
   String getDisponible();
 
