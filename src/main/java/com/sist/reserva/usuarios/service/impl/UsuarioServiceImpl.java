@@ -17,52 +17,57 @@ import org.springframework.stereotype.Service;
 @Service
 public class UsuarioServiceImpl implements IUsuarioService {
   @Autowired
-  private IUsuariosDAO usuariosDAO;
+  private IUsuariosDAO usuarioDAO;
 
   @Override
   public List<Usuarios> findAll() {
-    return usuariosDAO.findAll();
+    return usuarioDAO.findAll();
   }
 
   @Override
   public Optional<Usuarios> findById(Long id) {
-    return usuariosDAO.findById(id);
+    return usuarioDAO.findById(id);
   }
 
   @Override
   public List<ReservasDeUsuarioList> findReservasByUsuarioId(Long usuarioId) {
-    return usuariosDAO.findReservasByUsuarioId(usuarioId);
+    return usuarioDAO.findReservasByUsuarioId(usuarioId);
   }
 
   @Override
   public List<ServiciosReservadosPorUsuarioList> findServiciosReservadosByUsuarioId(
       Long usuarioId) {
-    return usuariosDAO.findServiciosReservadosByUsuarioId(usuarioId);
+    return usuarioDAO.findServiciosReservadosByUsuarioId(usuarioId);
   }
 
   @Override
   public List<ReservasPendientesList> findUsuariosConReservasPendientes() {
-    return usuariosDAO.findUsuariosConReservasPendientes();
+    return usuarioDAO.findUsuariosConReservasPendientes();
   }
 
   @Override
   public List<UsuariosPorRangoFechasList> findUsuariosByFechaRegistroBetween(
       LocalDate fechaInicio, LocalDate fechaFin) {
-    return usuariosDAO.findUsuariosByFechaRegistroBetween(fechaInicio, fechaFin);
+    return usuarioDAO.findUsuariosByFechaRegistroBetween(fechaInicio, fechaFin);
   }
 
   @Override
   public void save(Usuarios usuario) {
-    usuariosDAO.save(usuario);
+    usuarioDAO.save(usuario);
   }
 
   @Override
   public void update(UsuarioUpdate usuario) {
-    usuariosDAO.update(usuario);
+    usuarioDAO.update(usuario);
   }
 
   @Override
   public void deleteById(Long id) {
-    usuariosDAO.deleteById(id);
+    usuarioDAO.deleteById(id);
+  }
+
+  @Override
+  public Usuarios findByNombre(String nombre) {
+    return usuarioDAO.findByNombre(nombre);
   }
 }

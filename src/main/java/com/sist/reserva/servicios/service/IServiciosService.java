@@ -36,6 +36,9 @@ public interface IServiciosService {
   // Obtener Servicios con Precio Menor a un Valor
   List<IServiciosConPreciosMenores> findServiciosByPrecioLessThan(BigDecimal precio);
 
+  // obtener por nombre
+  Servicios findByNombre(String nombre);
+
   // guardar
   void save(Servicios servicio);
 

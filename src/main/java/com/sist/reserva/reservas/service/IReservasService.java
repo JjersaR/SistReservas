@@ -1,6 +1,9 @@
 package com.sist.reserva.reservas.service;
 
 import com.sist.reserva.reservas.dto.ReservaUpdate;
+import com.sist.reserva.reservas.dto.ReservasByServicio;
+import com.sist.reserva.reservas.dto.ReservasByUsuario;
+import com.sist.reserva.reservas.entity.EstadoReserva;
 import com.sist.reserva.reservas.entity.Reservas;
 import java.time.LocalDate;
 import java.util.List;
@@ -14,10 +17,10 @@ public interface IReservasService {
   Optional<Reservas> findById(Long id);
 
   // Obtener Reservas por Usuario
-  List<Reservas> findUsuarioNombre(String nombre);
+  List<ReservasByUsuario> findUsuarioNombre(String nombre);
 
   // Obtener Reservas por Servicio
-  List<Reservas> findServicioNombre(String nombre);
+  List<ReservasByServicio> findServicioNombre(String nombre);
 
   // Obtener Reservas en un Rango de Fechas
   List<Reservas> findReservasByFechaInicioBetweenAndFechaFinBetween(
@@ -27,7 +30,7 @@ public interface IReservasService {
       LocalDate finRangoFin);
 
   // Obtener Reservas por Estado
-  List<Reservas> findReservasByEstado(String estado);
+  List<Reservas> findReservasByEstado(EstadoReserva estado);
 
   // Obtener Reservas con un Número Específico de Personas
   List<Reservas> findReservasByNumPersonas(int numeroPersonas);

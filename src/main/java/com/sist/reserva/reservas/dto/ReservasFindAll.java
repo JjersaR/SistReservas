@@ -1,36 +1,23 @@
 package com.sist.reserva.reservas.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sist.reserva.reservas.entity.EstadoReserva;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 
-public class ReservaUpdate {
-  @JsonIgnore
+public class ReservasFindAll {
+
   private Long id;
 
-  @NotNull
-  private Long usuarioId;
+  private String usuarioNombre;
 
-  @Nullable
   private int numPersonas;
 
-  @NotNull
-  private Long servicioId;
+  private String servicioNombre;
 
-  @PastOrPresent
   private LocalDate fechaInicio;
 
-  @Future
   private LocalDate fechaFin;
 
-  @Nullable
-  private EstadoReserva estado;
+  private String estado;
 
-  @Nullable
   private String notas;
 
   public Long getId() {
@@ -41,12 +28,12 @@ public class ReservaUpdate {
     this.id = id;
   }
 
-  public Long getUsuarioId() {
-    return usuarioId;
+  public String getUsuarioNombre() {
+    return usuarioNombre;
   }
 
-  public void setUsuarioId(Long usuarioId) {
-    this.usuarioId = usuarioId;
+  public void setUsuarioNombre(String usuarioNombre) {
+    this.usuarioNombre = usuarioNombre;
   }
 
   public int getNumPersonas() {
@@ -57,12 +44,12 @@ public class ReservaUpdate {
     this.numPersonas = numPersonas;
   }
 
-  public Long getServicioId() {
-    return servicioId;
+  public String getServicioNombre() {
+    return servicioNombre;
   }
 
-  public void setServicioId(Long servicioId) {
-    this.servicioId = servicioId;
+  public void setServicioNombre(String servicioNombre) {
+    this.servicioNombre = servicioNombre;
   }
 
   public LocalDate getFechaInicio() {
@@ -81,11 +68,11 @@ public class ReservaUpdate {
     this.fechaFin = fechaFin;
   }
 
-  public EstadoReserva getEstado() {
+  public String getEstado() {
     return estado;
   }
 
-  public void setEstado(EstadoReserva estado) {
+  public void setEstado(String estado) {
     this.estado = estado;
   }
 

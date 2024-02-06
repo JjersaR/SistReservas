@@ -30,6 +30,9 @@ public interface IUsuarioService {
   List<UsuariosPorRangoFechasList> findUsuariosByFechaRegistroBetween(
       LocalDate fechaInicio, LocalDate fechaFin);
 
+  // encontrar por nombre
+  Usuarios findByNombre(String nombre);
+
   // guardar
   void save(Usuarios usuario);
 

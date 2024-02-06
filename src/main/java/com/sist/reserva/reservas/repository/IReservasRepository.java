@@ -1,13 +1,18 @@
 package com.sist.reserva.reservas.repository;
 
 import com.sist.reserva.reservas.dto.ReservaUpdate;
+import com.sist.reserva.reservas.dto.ReservasByServicio;
+import com.sist.reserva.reservas.dto.ReservasByUsuario;
+import com.sist.reserva.reservas.entity.EstadoReserva;
 import com.sist.reserva.reservas.entity.Reservas;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface IReservasRepository extends JpaRepository<Reservas, Long> {
@@ -16,10 +21,10 @@ public interface IReservasRepository extends JpaRepository<Reservas, Long> {
   Optional<Reservas> findById(Long id);
 
   // Obtener Reservas por Usuario
-  List<Reservas> findByUsuarioNombre(String nombre);
+  List<ReservasByUsuario> findByUsuarioNombre(String nombre);
 
   // Obtener Reservas por Servicio
-  List<Reservas> findByServicioNombre(String nombre);
+  List<ReservasByServicio> findByServicioNombre(String nombre);
 
   // Obtener Reservas en un Rango de Fechas
   List<Reservas> findReservasByFechaInicioBetweenAndFechaFinBetween(
@@ -29,7 +34,7 @@ public interface IReservasRepository extends JpaRepository<Reservas, Long> {
       LocalDate finRangoFin);
 
   // Obtener Reservas por Estado
-  List<Reservas> findReservasByEstado(String estado);
+  List<Reservas> findReservasByEstado(EstadoReserva estado);
 
   // Obtener Reservas con un Número Específico de Personas
   List<Reservas> findReservasByNumPersonas(int numeroPersonas);
@@ -39,5 +44,7 @@ public interface IReservasRepository extends JpaRepository<Reservas, Long> {
       + " :#{#reserva.numPersonas}, v.servicio.id = :#{#reserva.servicioId}, v.fechaInicio ="
       + " :#{#reserva.fechaInicio}, v.fechaFin = :#{#reserva.fechaFin}, v.estado ="
       + " :#{#reserva.estado}, v.notas = :#{#reserva.notas} WHERE v.id = :#{#reserva.id}")
+  @Transactional
+  @Modifying
   void update(ReservaUpdate reserva);
 }

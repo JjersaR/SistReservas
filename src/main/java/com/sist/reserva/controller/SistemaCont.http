@@ -42,6 +42,7 @@ Content-Type: application/json
 DELETE http://localhost:8080/sistReserva/usuarios/eliminar/31
 
 # ---------------------------- PARTE DE SERVICIOS ----------------------------
+
 # mostrar todos los servicios
 GET http://localhost:8080/sistReserva/servicios
 
@@ -90,3 +91,61 @@ Content-Type: application/json
 
 # Borrar
 DELETE http://localhost:8080/sistReserva/servicios/eliminar/47
+
+# ---------------------------- PARTE DE RESERVAS ----------------------------
+
+# mostrar todas las reservas
+GET http://localhost:8080/sistReserva/reservas/todas
+
+# mostrar por id
+GET http://localhost:8080/sistReserva/reservas/27
+
+# mostrar por nombre de usuario
+GET http://localhost:8080/sistReserva/reservas/usuario/Carlos
+
+# mostrar por nombre de servicios
+GET http://localhost:8080/sistReserva/reservas/servicios/Posada
+
+# rango de fechas
+GET http://localhost:8080/sistReserva/reservas/rango-fechas?inicioRangoInicio=2024-02-01&finRangoInicio=2024-02-05&inicioRangoFin=2024-03-05&finRangoFin=2024-03-05
+
+# mostrar por estado {PENDIENTE, CONFIRMADA, CANCELADA, COMPLETADA, EN_PROGRESO, NO_SHOW, REPROGRAMABLE}
+GET http://localhost:8080/sistReserva/reservas/estado/PENDIENTE
+
+# mostrar por numero de personas
+GET http://localhost:8080/sistReserva/reservas/numero-personas/5
+
+# guardar reserva
+POST http://localhost:8080/sistReserva/reservas/guardar
+Content-Type: application/json
+
+{
+  "usuarioNombre": "Ana",
+  "numPersonas": 2,
+  "servicioNombre": "Pensión",
+  "fechaInicio": "2024-02-05",
+  "fechaFin": "2024-04-01",
+  "estado": "NO_SHOW",
+  "notas": ""
+}
+
+# ver id´ś de servicios
+GET http://localhost:8080/sistReserva/servicios
+# ver id´s de usuarios
+GET http://localhost:8080/sistReserva/usuarios
+# actualizar
+PUT http://localhost:8080/sistReserva/reservas/actualizar/27
+Content-Type: application/json
+
+{
+  "usuarioId": 16,
+  "numPersonas": 5,
+  "servicioId": 32,
+  "fechaInicio": "2024-02-04",
+  "fechaFin": "2024-04-25",
+  "estado": "COMPLETADA",
+  "notas": "Pagara en 2 semanas"
+}
+
+# eliminar reserva
+DELETE http://localhost:8080/sistReserva/reservas/eliminar/27

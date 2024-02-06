@@ -72,4 +72,9 @@ public class ServiciosDAOImpl implements IServiciosDAO {
   public void deleteById(Long id) {
     serviciosRepository.deleteById(id);
   }
+
+  @Override
+  public Servicios findByNombre(String nombre) {
+    return serviciosRepository.findByNombre(nombre);
+  }
 }

@@ -1,5 +1,15 @@
 package com.sist.reserva.controller;
 
+import com.sist.reserva.reservas.mapper.IReservasMapper;
+import com.sist.reserva.reservas.dto.ReservaUpdate;
+import com.sist.reserva.reservas.dto.ReservasByServicio;
+import com.sist.reserva.reservas.dto.ReservasByUsuario;
+import com.sist.reserva.reservas.dto.ReservasFindAll;
+import com.sist.reserva.reservas.dto.ReservasFindId;
+import com.sist.reserva.reservas.dto.ReservasSave;
+import com.sist.reserva.reservas.entity.EstadoReserva;
+import com.sist.reserva.reservas.entity.Reservas;
+import com.sist.reserva.reservas.service.IReservasService;
 import com.sist.reserva.servicios.dto.IServiciosConPreciosMenores;
 import com.sist.reserva.servicios.dto.IServiciosDisponibles;
 import com.sist.reserva.servicios.dto.IServiciosPorCategoria;
@@ -53,6 +63,8 @@ public class SistemaCont {
   private IUsuarioService usuarioService;
   @Autowired
   private IServiciosService serviciosService;
+  @Autowired
+  private IReservasService reservasService;
 
   // listar todos
   @GetMapping("/usuarios")
@@ -301,5 +313,144 @@ public class SistemaCont {
     }
     serviciosService.deleteById(id);
     return ResponseEntity.ok("Servicio " + id + " eliminado");
+  }
+  /*
+   * ---------------------
+   *
+   *
+   * | PARTE DE RESERVAS |
+   *
+   *
+   * ---------------------
+   */
+
+  // todas las reservas
+  @GetMapping("/reservas/todas")
+  public ResponseEntity<?> findAllReservas() {
+    List<ReservasFindAll> todasLasReservas = IReservasMapper.INSTANCE.toListAll(reservasService.findAll());
+    if (todasLasReservas.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
+    return ResponseEntity.ok(todasLasReservas);
+  }
+
+  // por id
+  @GetMapping("/reservas/{id}")
+  public ResponseEntity<?> findByIdReserva(@PathVariable Long id) {
+    Optional<Reservas> reservaOP = reservasService.findById(id);
+    if (!reservaOP.isPresent()) {
+      return ResponseEntity.notFound().build();
+    }
+    Reservas reservaId = reservaOP.get();
+    ReservasFindId reservaEncontrada = IReservasMapper.INSTANCE.toId(reservaId);
+    return ResponseEntity.ok(reservaEncontrada);
+  }
+
+  // Obtener Reservas por Usuario
+  @GetMapping("/reservas/usuario/{nombre}")
+  public ResponseEntity<?> findByNombre(@PathVariable String nombre) {
+    List<ReservasByUsuario> reservasUsuarios = reservasService.findUsuarioNombre(nombre);
+    if (reservasUsuarios.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
+    return ResponseEntity.ok(reservasUsuarios);
+  }
+
+  // Obtener Reservas por Servicio
+  @GetMapping("/reservas/servicios/{nombre}")
+  public ResponseEntity<?> findByServicio(@PathVariable String nombre) {
+    List<ReservasByServicio> rByServicios = reservasService.findServicioNombre(nombre);
+    if (rByServicios.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
+    return ResponseEntity.ok(rByServicios);
+  }
+
+  // Obtener Reservas en un Rango de Fechas
+  @GetMapping("/reservas/rango-fechas")
+  public ResponseEntity<?> findByRangoFechas(
+      @RequestParam("inicioRangoInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicioRangoInicio,
+      @RequestParam("finRangoInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate finRangoInicio,
+      @RequestParam("inicioRangoFin") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicioRangoFin,
+      @RequestParam("finRangoFin") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate finRangoFin) {
+    List<ReservasFindAll> findAlls = IReservasMapper.INSTANCE
+        .toListAll(reservasService.findReservasByFechaInicioBetweenAndFechaFinBetween(
+            inicioRangoInicio, finRangoInicio, inicioRangoFin, finRangoFin));
+    if (findAlls.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
+    return ResponseEntity.ok(findAlls);
+  }
+
+  // Obtener Reservas por Estado
+  @GetMapping("/reservas/estado/{estado}")
+  public ResponseEntity<?> findByEstado(@PathVariable String estado) {
+    if (estado == null) {
+      return ResponseEntity.notFound().build();
+    }
+    List<ReservasFindAll> findAlls = IReservasMapper.INSTANCE
+        .toListAll(reservasService.findReservasByEstado(IReservasMapper.INSTANCE.toEnum(estado)));
+    if (findAlls.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
+    return ResponseEntity.ok(findAlls);
+  }
+
+  // Obtener Reservas con un Número Específico de Personas
+  @GetMapping("/reservas/numero-personas/{numero}")
+  public ResponseEntity<?> findByNumeroPersonas(@PathVariable int numero) {
+    List<ReservasFindAll> findAlls = IReservasMapper.INSTANCE
+        .toListAll(reservasService.findReservasByNumPersonas(numero));
+    if (findAlls.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
+    return ResponseEntity.ok(findAlls);
+  }
+
+  // guardar
+  @PostMapping("/reservas/guardar")
+  public ResponseEntity<?> saveReserva(@RequestBody @Valid ReservasSave reservasSave) throws URISyntaxException {
+    Reservas nuevaReserva = new Reservas();
+
+    nuevaReserva.setUsuario(usuarioService.findByNombre(reservasSave.getUsuarioNombre()));
+    nuevaReserva.setServicio(serviciosService.findByNombre(reservasSave.getServicioNombre()));
+    nuevaReserva.setEstado(IReservasMapper.INSTANCE.toEnum(reservasSave.getEstado()));
+    nuevaReserva.setNumPersonas(reservasSave.getNumPersonas());
+    nuevaReserva.setFechaInicio(reservasSave.getFechaInicio());
+    nuevaReserva.setFechaFin(reservasSave.getFechaFin());
+    nuevaReserva.setNotas(reservasSave.getNotas());
+
+    reservasService.save(nuevaReserva);
+    return ResponseEntity.created(new URI("/sistReserva/reservas/guardar"))
+        .body("Reserva de usuario " + reservasSave.getUsuarioNombre() + " guardada");
+  }
+
+  // actualizar
+  @PutMapping("/reservas/actualizar/{id}")
+  public ResponseEntity<?> updateReserva(@PathVariable Long id, @RequestBody @Valid ReservaUpdate reservaUpdate) {
+    if (id == null) {
+      return ResponseEntity.notFound().build();
+    }
+    var reservaOp = reservasService.findById(id);
+    if (!reservaOp.isPresent()) {
+      return ResponseEntity.notFound().build();
+    }
+    reservaUpdate.setId(id);
+    reservasService.update(reservaUpdate);
+    return ResponseEntity.ok("Reserva " + id + " actualizada, de usuario " + reservaUpdate.getUsuarioId());
+  }
+
+  // eliminar
+  @DeleteMapping("/reservas/eliminar/{id}")
+  public ResponseEntity<?> delete(@PathVariable Long id) {
+    if (id == null) {
+      return ResponseEntity.notFound().build();
+    }
+    var reservaOP = reservasService.findById(id);
+    if (!reservaOP.isPresent()) {
+      return ResponseEntity.notFound().build();
+    }
+    reservasService.deleteById(id);
+    return ResponseEntity.ok("Reserva " + id + " eliminada");
   }
 }

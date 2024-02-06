@@ -39,6 +39,9 @@ public interface IServiciosRepository extends JpaRepository<Servicios, Long> {
   // Obtener Servicios con Precio Menor a un Valor
   List<IServiciosConPreciosMenores> findByPrecioLessThan(BigDecimal precio);
 
+  // obtener por nombre
+  Servicios findByNombre(String nombre);
+
   // actualizar
   @Query("UPDATE Servicios s SET s.nombre = :#{#servicio.nombre}, s.precio = :#{#servicio.precio},"
       + " s.categoria = :#{#servicio.categoria}, s.duracion = :#{#servicio.duracion},"

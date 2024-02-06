@@ -49,6 +49,9 @@ public interface IUsuarioRepository extends JpaRepository<Usuarios, Long> {
   List<UsuariosPorRangoFechasList> findUsuariosByFechaRegistroBetween(
       LocalDate fechaInicio, LocalDate fechaFin);
 
+  // encontrar por nombre
+  Usuarios findByNombre(String nombre);
+
   // actualizar
   @Transactional
   @Query("UPDATE Usuarios u SET u.nombre = :#{#usuario.nombre}, u.apellidoPaterno ="

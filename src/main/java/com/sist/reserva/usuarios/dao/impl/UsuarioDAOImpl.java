@@ -66,4 +66,9 @@ public class UsuarioDAOImpl implements IUsuariosDAO {
   public void deleteById(Long id) {
     usuarioRepository.deleteById(id);
   }
+
+  @Override
+  public Usuarios findByNombre(String nombre) {
+    return usuarioRepository.findByNombre(nombre);
+  }
 }

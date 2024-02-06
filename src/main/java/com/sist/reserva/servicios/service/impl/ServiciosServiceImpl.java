@@ -72,4 +72,9 @@ public class ServiciosServiceImpl implements IServiciosService {
   public void deleteById(Long id) {
     serviciosDAO.deleteById(id);
   }
+
+  @Override
+  public Servicios findByNombre(String nombre) {
+    return serviciosDAO.findByNombre(nombre);
+  }
 }

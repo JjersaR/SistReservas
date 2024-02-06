@@ -2,6 +2,9 @@ package com.sist.reserva.reservas.dao.impl;
 
 import com.sist.reserva.reservas.dao.IReservasDAO;
 import com.sist.reserva.reservas.dto.ReservaUpdate;
+import com.sist.reserva.reservas.dto.ReservasByServicio;
+import com.sist.reserva.reservas.dto.ReservasByUsuario;
+import com.sist.reserva.reservas.entity.EstadoReserva;
 import com.sist.reserva.reservas.entity.Reservas;
 import com.sist.reserva.reservas.repository.IReservasRepository;
 import java.time.LocalDate;
@@ -27,12 +30,12 @@ public class ReservasDAOImpl implements IReservasDAO {
   }
 
   @Override
-  public List<Reservas> findUsuarioNombre(String nombre) {
+  public List<ReservasByUsuario> findUsuarioNombre(String nombre) {
     return repository.findByUsuarioNombre(nombre);
   }
 
   @Override
-  public List<Reservas> findServicioNombre(String nombre) {
+  public List<ReservasByServicio> findServicioNombre(String nombre) {
     return repository.findByServicioNombre(nombre);
   }
 
@@ -47,7 +50,7 @@ public class ReservasDAOImpl implements IReservasDAO {
   }
 
   @Override
-  public List<Reservas> findReservasByEstado(String estado) {
+  public List<Reservas> findReservasByEstado(EstadoReserva estado) {
     return repository.findReservasByEstado(estado);
   }
 
