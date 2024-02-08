@@ -95,7 +95,7 @@ DELETE http://localhost:8080/sistReserva/servicios/eliminar/47
 # ---------------------------- PARTE DE RESERVAS ----------------------------
 
 # mostrar todas las reservas
-GET http://localhost:8080/sistReserva/reservas/todas
+GET http://localhost:8080/sistReserva/reservas
 
 # mostrar por id
 GET http://localhost:8080/sistReserva/reservas/27

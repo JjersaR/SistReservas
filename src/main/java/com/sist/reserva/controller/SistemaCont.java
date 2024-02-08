@@ -1,5 +1,7 @@
 package com.sist.reserva.controller;
 
+import com.sist.reserva.controller.handleEx.ObjetoNoContentException;
+import com.sist.reserva.controller.handleEx.ObjetoNotFoundException;
 import com.sist.reserva.reservas.mapper.IReservasMapper;
 import com.sist.reserva.reservas.dto.ReservaUpdate;
 import com.sist.reserva.reservas.dto.ReservasByServicio;
@@ -7,7 +9,6 @@ import com.sist.reserva.reservas.dto.ReservasByUsuario;
 import com.sist.reserva.reservas.dto.ReservasFindAll;
 import com.sist.reserva.reservas.dto.ReservasFindId;
 import com.sist.reserva.reservas.dto.ReservasSave;
-import com.sist.reserva.reservas.entity.EstadoReserva;
 import com.sist.reserva.reservas.entity.Reservas;
 import com.sist.reserva.reservas.service.IReservasService;
 import com.sist.reserva.servicios.dto.IServiciosConPreciosMenores;
@@ -84,11 +85,7 @@ public class SistemaCont {
     if (id == null) {
       return ResponseEntity.notFound().build();
     }
-
     Optional<Usuarios> usuOp = usuarioService.findById(id);
-    if (usuOp.isEmpty()) {
-      return ResponseEntity.notFound().build();
-    }
 
     Usuarios usuarios = usuOp.get();
     UsuarioById usuarioById = IUsuarioMapper.INSTANCE.toUsuarioIdDTO(usuarios);
@@ -103,9 +100,6 @@ public class SistemaCont {
     }
 
     List<ReservasDeUsuarioList> reservasDeUsuarioLists = usuarioService.findReservasByUsuarioId(id);
-    if (reservasDeUsuarioLists.isEmpty()) {
-      return ResponseEntity.noContent().build();
-    }
 
     return ResponseEntity.ok(reservasDeUsuarioLists);
   }
@@ -119,9 +113,6 @@ public class SistemaCont {
 
     List<ServiciosReservadosPorUsuarioList> serviciosReservadosLists = usuarioService
         .findServiciosReservadosByUsuarioId(id);
-    if (serviciosReservadosLists.isEmpty()) {
-      return ResponseEntity.noContent().build();
-    }
 
     return ResponseEntity.ok(serviciosReservadosLists);
   }
@@ -130,9 +121,6 @@ public class SistemaCont {
   @GetMapping("/usuarios/reservas-pendientes")
   public ResponseEntity<?> findReservasPendientes() {
     List<ReservasPendientesList> reservasPendientesLists = usuarioService.findUsuariosConReservasPendientes();
-    if (reservasPendientesLists.isEmpty()) {
-      return ResponseEntity.noContent().build();
-    }
     return ResponseEntity.ok(reservasPendientesLists);
   }
 
@@ -143,9 +131,6 @@ public class SistemaCont {
       @RequestParam("fechaFin") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
     List<UsuariosPorRangoFechasList> usuariosPorRangoFechasLists = usuarioService
         .findUsuariosByFechaRegistroBetween(fechaInicio, fechaFin);
-    if (usuariosPorRangoFechasLists.isEmpty()) {
-      return ResponseEntity.noContent().build();
-    }
     return ResponseEntity.ok(usuariosPorRangoFechasLists);
   }
 
@@ -198,10 +183,6 @@ public class SistemaCont {
   public ResponseEntity<?> allServicios() {
     List<ServiciosAllList> listaTodosLosServicios = IServiciosMapper.INSTANCE.toAllListDTO(serviciosService.findAll());
 
-    if (listaTodosLosServicios.isEmpty()) {
-      return ResponseEntity.noContent().build();
-    }
-
     return ResponseEntity.ok(listaTodosLosServicios);
   }
 
@@ -213,7 +194,7 @@ public class SistemaCont {
     }
     Optional<Servicios> servOp = serviciosService.findById(id);
     if (!servOp.isPresent()) {
-      return ResponseEntity.notFound().build();
+      throw new ObjetoNoContentException("El servicio " + id + " NO existe");
     }
     Servicios servicioEncontrado = servOp.get();
     ServiciosAllList servicioId = IServiciosMapper.INSTANCE.map(servicioEncontrado);
@@ -224,9 +205,6 @@ public class SistemaCont {
   @GetMapping("/servicios/categoria/{categoria}")
   public ResponseEntity<?> findCategoria(@PathVariable String categoria) {
     List<IServiciosPorCategoria> serviciosPorCategorias = serviciosService.findByCategoria(categoria);
-    if (serviciosPorCategorias.isEmpty()) {
-      return ResponseEntity.noContent().build();
-    }
     return ResponseEntity.ok(serviciosPorCategorias);
   }
 
@@ -235,9 +213,6 @@ public class SistemaCont {
   public ResponseEntity<?> findDisponibles(@PathVariable String disponibilidad) {
     DisponibilidadServicio disponible = IServiciosMapper.INSTANCE.mapToEnum(disponibilidad);
     List<IServiciosDisponibles> serviciosDisponibles = serviciosService.findServiciosByDisponible(disponible);
-    if (serviciosDisponibles.isEmpty()) {
-      return ResponseEntity.noContent().build();
-    }
     return ResponseEntity.ok(serviciosDisponibles);
   }
 
@@ -248,9 +223,6 @@ public class SistemaCont {
       return ResponseEntity.notFound().build();
     }
     List<IServiciosPorUbicacion> serviciosPorUbicacions = serviciosService.findServiciosByUbicacion(ubicacion);
-    if (serviciosPorUbicacions.isEmpty()) {
-      return ResponseEntity.noContent().build();
-    }
     return ResponseEntity.ok(serviciosPorUbicacions);
   }
 
@@ -261,9 +233,6 @@ public class SistemaCont {
     Duration duration = Duration.parse("PT" + duracion);
     // crear la lista de proyeccion
     List<IServiciosPorDuracion> serviciosPorDuracions = serviciosService.findServiciosByDuracion(duration);
-    if (serviciosPorDuracions.isEmpty()) {
-      return ResponseEntity.noContent().build();
-    }
     return ResponseEntity.ok(serviciosPorDuracions);
   }
 
@@ -274,9 +243,6 @@ public class SistemaCont {
       return ResponseEntity.noContent().build();
     }
     List<IServiciosConPreciosMenores> preciosMenores = serviciosService.findServiciosByPrecioLessThan(precio);
-    if (preciosMenores.isEmpty()) {
-      return ResponseEntity.noContent().build();
-    }
     return ResponseEntity.ok(preciosMenores);
   }
 
@@ -294,7 +260,7 @@ public class SistemaCont {
   public ResponseEntity<?> updateServicio(@PathVariable Long id, @RequestBody @Valid ServiciosUpdate serviciosUpdate) {
     Optional<Servicios> serOp = serviciosService.findById(id);
     if (!serOp.isPresent()) {
-      return ResponseEntity.notFound().build();
+      throw new ObjetoNotFoundException("El Servicio " + id + "NO se puede actualizar");
     }
     serviciosUpdate.setId(id);
     serviciosService.update(serviciosUpdate);
@@ -309,7 +275,7 @@ public class SistemaCont {
     }
     Optional<Servicios> serOp = serviciosService.findById(id);
     if (!serOp.isPresent()) {
-      return ResponseEntity.notFound().build();
+      throw new ObjetoNotFoundException("No se puede eliminar el servicio " + id);
     }
     serviciosService.deleteById(id);
     return ResponseEntity.ok("Servicio " + id + " eliminado");
@@ -325,12 +291,10 @@ public class SistemaCont {
    */
 
   // todas las reservas
-  @GetMapping("/reservas/todas")
+  @GetMapping("/reservas")
   public ResponseEntity<?> findAllReservas() {
     List<ReservasFindAll> todasLasReservas = IReservasMapper.INSTANCE.toListAll(reservasService.findAll());
-    if (todasLasReservas.isEmpty()) {
-      return ResponseEntity.noContent().build();
-    }
+
     return ResponseEntity.ok(todasLasReservas);
   }
 
@@ -339,7 +303,7 @@ public class SistemaCont {
   public ResponseEntity<?> findByIdReserva(@PathVariable Long id) {
     Optional<Reservas> reservaOP = reservasService.findById(id);
     if (!reservaOP.isPresent()) {
-      return ResponseEntity.notFound().build();
+      throw new ObjetoNotFoundException("La reserva " + id + "no existe");
     }
     Reservas reservaId = reservaOP.get();
     ReservasFindId reservaEncontrada = IReservasMapper.INSTANCE.toId(reservaId);
@@ -350,9 +314,6 @@ public class SistemaCont {
   @GetMapping("/reservas/usuario/{nombre}")
   public ResponseEntity<?> findByNombre(@PathVariable String nombre) {
     List<ReservasByUsuario> reservasUsuarios = reservasService.findUsuarioNombre(nombre);
-    if (reservasUsuarios.isEmpty()) {
-      return ResponseEntity.noContent().build();
-    }
     return ResponseEntity.ok(reservasUsuarios);
   }
 
@@ -360,9 +321,6 @@ public class SistemaCont {
   @GetMapping("/reservas/servicios/{nombre}")
   public ResponseEntity<?> findByServicio(@PathVariable String nombre) {
     List<ReservasByServicio> rByServicios = reservasService.findServicioNombre(nombre);
-    if (rByServicios.isEmpty()) {
-      return ResponseEntity.noContent().build();
-    }
     return ResponseEntity.ok(rByServicios);
   }
 
@@ -376,9 +334,6 @@ public class SistemaCont {
     List<ReservasFindAll> findAlls = IReservasMapper.INSTANCE
         .toListAll(reservasService.findReservasByFechaInicioBetweenAndFechaFinBetween(
             inicioRangoInicio, finRangoInicio, inicioRangoFin, finRangoFin));
-    if (findAlls.isEmpty()) {
-      return ResponseEntity.noContent().build();
-    }
     return ResponseEntity.ok(findAlls);
   }
 
@@ -390,9 +345,6 @@ public class SistemaCont {
     }
     List<ReservasFindAll> findAlls = IReservasMapper.INSTANCE
         .toListAll(reservasService.findReservasByEstado(IReservasMapper.INSTANCE.toEnum(estado)));
-    if (findAlls.isEmpty()) {
-      return ResponseEntity.noContent().build();
-    }
     return ResponseEntity.ok(findAlls);
   }
 
@@ -401,9 +353,6 @@ public class SistemaCont {
   public ResponseEntity<?> findByNumeroPersonas(@PathVariable int numero) {
     List<ReservasFindAll> findAlls = IReservasMapper.INSTANCE
         .toListAll(reservasService.findReservasByNumPersonas(numero));
-    if (findAlls.isEmpty()) {
-      return ResponseEntity.noContent().build();
-    }
     return ResponseEntity.ok(findAlls);
   }
 
@@ -429,11 +378,11 @@ public class SistemaCont {
   @PutMapping("/reservas/actualizar/{id}")
   public ResponseEntity<?> updateReserva(@PathVariable Long id, @RequestBody @Valid ReservaUpdate reservaUpdate) {
     if (id == null) {
-      return ResponseEntity.notFound().build();
+      throw new ObjetoNotFoundException("La reserva " + id + " no se puede actualizar");
     }
     var reservaOp = reservasService.findById(id);
     if (!reservaOp.isPresent()) {
-      return ResponseEntity.notFound().build();
+      throw new ObjetoNotFoundException("La reserva no se puede actualizar");
     }
     reservaUpdate.setId(id);
     reservasService.update(reservaUpdate);
@@ -448,7 +397,7 @@ public class SistemaCont {
     }
     var reservaOP = reservasService.findById(id);
     if (!reservaOP.isPresent()) {
-      return ResponseEntity.notFound().build();
+      throw new ObjetoNotFoundException("La reserva no se puede eliminar");
     }
     reservasService.deleteById(id);
     return ResponseEntity.ok("Reserva " + id + " eliminada");

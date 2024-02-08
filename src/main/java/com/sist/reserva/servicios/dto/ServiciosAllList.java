@@ -1,5 +1,7 @@
 package com.sist.reserva.servicios.dto;
 
+import com.sist.reserva.servicios.entity.DisponibilidadServicio;
+
 import java.math.BigDecimal;
 import java.time.Duration;
 
@@ -15,7 +17,7 @@ public class ServiciosAllList {
 
   private Duration duracion;
 
-  private String disponible;
+  private DisponibilidadServicio disponible;
 
   private String ubicacion;
 
@@ -61,11 +63,11 @@ public class ServiciosAllList {
     this.duracion = duracion;
   }
 
-  public String getDisponible() {
+  public DisponibilidadServicio getDisponible() {
     return disponible;
   }
 
-  public void setDisponible(String disponible) {
+  public void setDisponible(DisponibilidadServicio disponible) {
     this.disponible = disponible;
   }
 

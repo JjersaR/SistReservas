@@ -1,5 +1,7 @@
 package com.sist.reserva.servicios.service.impl;
 
+import com.sist.reserva.controller.handleEx.ObjetoNoContentException;
+import com.sist.reserva.controller.handleEx.ObjetoNotFoundException;
 import com.sist.reserva.servicios.dao.IServiciosDAO;
 import com.sist.reserva.servicios.dto.IServiciosConPreciosMenores;
 import com.sist.reserva.servicios.dto.IServiciosDisponibles;
@@ -25,36 +27,50 @@ public class ServiciosServiceImpl implements IServiciosService {
 
   @Override
   public List<Servicios> findAll() {
+    if (serviciosDAO.findAll().isEmpty())
+      throw new ObjetoNoContentException("Lista de Servicios Vacia");
     return serviciosDAO.findAll();
   }
 
   @Override
   public Optional<Servicios> findById(Long id) {
+    if (serviciosDAO.findById(id).isEmpty())
+      throw new ObjetoNotFoundException("El servicio NO existe");
     return serviciosDAO.findById(id);
   }
 
   @Override
   public List<IServiciosPorCategoria> findByCategoria(String categoria) {
+    if (serviciosDAO.findByCategoria(categoria).isEmpty())
+      throw new ObjetoNotFoundException("Lista de la categoria: " + categoria + " vacia");
     return serviciosDAO.findByCategoria(categoria);
   }
 
   @Override
   public List<IServiciosDisponibles> findServiciosByDisponible(DisponibilidadServicio disponible) {
+    if (serviciosDAO.findServiciosByDisponible(disponible).isEmpty())
+      throw new ObjetoNoContentException("La lista dada por la disponibilidad: " + disponible + " esta vacia");
     return serviciosDAO.findServiciosByDisponible(disponible);
   }
 
   @Override
   public List<IServiciosPorUbicacion> findServiciosByUbicacion(String ubicacion) {
+    if (serviciosDAO.findServiciosByUbicacion(ubicacion).isEmpty())
+      throw new ObjetoNoContentException("La lista de la ubicacion: " + ubicacion + " esta vacia");
     return serviciosDAO.findServiciosByUbicacion(ubicacion);
   }
 
   @Override
   public List<IServiciosPorDuracion> findServiciosByDuracion(Duration duracion) {
+    if (serviciosDAO.findServiciosByDuracion(duracion).isEmpty())
+      throw new ObjetoNoContentException("La lista de servicios dada la duracion " + duracion + " esta vacia");
     return serviciosDAO.findServiciosByDuracion(duracion);
   }
 
   @Override
   public List<IServiciosConPreciosMenores> findServiciosByPrecioLessThan(BigDecimal precio) {
+    if (serviciosDAO.findServiciosByPrecioLessThan(precio).isEmpty())
+      throw new ObjetoNoContentException("No hay Servicios con precios menores a " + precio);
     return serviciosDAO.findServiciosByPrecioLessThan(precio);
   }
 
