@@ -1,5 +1,6 @@
 # Tour por Proyecto SistReservas
 
+``` java
 ## Estructura de PURAS Carpetas
 ├── src
 │   ├── main
@@ -37,7 +38,7 @@
 │   │   │                   ├── repository
 │   │   │                   └── service
 │   │   │                       └── impl
-___
+```
 # Numero de Tablas del Proyecto
 
 Existen 3 tablas en el manejador de bases de datos SQL Server:
