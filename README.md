@@ -155,7 +155,7 @@ public class Usuarios {
 
 ```
 
-## Repositoy de Servicios
+## Repository de Servicios
 ```java
   // listar todos
   List<Servicios> findAll();
@@ -192,7 +192,7 @@ public class Usuarios {
 
 ```
 
-## Repositoy de Usuarios
+## Repository de Usuarios
 
 ```java
   // listar todos
@@ -243,7 +243,7 @@ public interface UsuariosPorRangoFechasList {
 ```
 
 # MapStruct
-Dentro de cada carpeta hay una carpeta que se llama mapper/I*Mapper.java
+Dentro de cada carpeta de Entidad hay una carpeta que se llama mapper/I*Mapper.java
 Por ejemplo el mapeador de la tabla/clase de Servicios se ve así:
 
 ```java
